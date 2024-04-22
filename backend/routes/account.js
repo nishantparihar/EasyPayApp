@@ -9,13 +9,11 @@ const router = express.Router();
 
 
 router.get("/balance", authMiddleware, async (req, res) => {
-    const accountDetails = accountModel.find({userId: req.usedId});
-
-    res.send(200).json({
+    const accountDetails = await accountModel.findOne({userId: req.userId});
+    res.status(200).json({
         balance: accountDetails.balance,
     })
 })
-
 
 
 router.post("/transfer", authMiddleware, async (req, res) => {
@@ -54,6 +52,7 @@ router.post("/transfer", authMiddleware, async (req, res) => {
         message: "Transfer successful"
     });
 });
+
 
 
 module.exports = router

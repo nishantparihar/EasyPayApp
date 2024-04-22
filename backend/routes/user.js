@@ -24,14 +24,16 @@ router.post("/signup", async (req, res)=>{
 
     if(!parsedDeatials.success){
         res.status(411).json({
-            message: "Email already taken / Incorrect inputs"
+            message: "Incorrect inputs"
         });
     }
     else{
-        const findResult = await userModel.find({'username' : parsedDeatials.data.username});
+        const findResult = await userModel.findOne({'username' : parsedDeatials.data.username});
+        
         if(findResult){
+            console.log(findResult)
             res.status(411).json({
-                message: "Email already taken / Incorrect inputs"
+                message: "Email already taken"
             });
         }
         else{
@@ -104,6 +106,7 @@ const passwordValidation = zod.object({
 
 
 router.put("/", authMiddleware, async (req, res) => {
+    
     const newInfo = req.body;
     const { success } = passwordValidation.safeParse(newInfo);
   
@@ -126,9 +129,10 @@ router.put("/", authMiddleware, async (req, res) => {
 
 
 router.get("/bulk", async (req, res) => {
-    const filter = req.query.filter || "";
+    let filter = req.query.filter || "";
+    filter = new RegExp(filter, 'i');
 
-    const users = await User.find({
+    const users = await userModel.find({
         $or: [
                 {
                    firstName: { "$regex": filter }
