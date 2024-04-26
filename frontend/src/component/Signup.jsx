@@ -31,7 +31,7 @@ export function Signup(){
                 <Button label={"Sign up"} onClick={onSignUpClick}></Button>
             </div>
             
-            <div>
+            <div className="mb-4">
                 <BottomWarning label={"Already have an account?"} buttonText={"Sign in"} to={"/signin"} ></BottomWarning>
             </div>
         
