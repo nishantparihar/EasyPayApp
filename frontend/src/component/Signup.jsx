@@ -3,7 +3,7 @@ import {SubHeading} from "./SubHeading"
 import {InputBox} from "./InputBox"
 import { Button } from "./Button"
 import { BottomWarning } from "./BottomWarning"
-
+import { firstName, lastName, username, password } from "../state/atoms/atoms"
 
 
 export function Signup(){
@@ -22,10 +22,10 @@ export function Signup(){
             <SubHeading content={"Enter your information to create an account"}></SubHeading>
             </div>
           
-            <InputBox value={"First Name"} placeholder={"John"} name={"fname"}></InputBox>
-            <InputBox value={"Last Name"} placeholder={"Doe"} name={"lname"}></InputBox>
-            <InputBox value={"Email"} placeholder={"example@gmail.com"} name={"email"}></InputBox>
-            <InputBox value={"Password"} placeholder={"123456"} name={"password"}></InputBox>
+            <InputBox value={"First Name"} placeholder={"John"} name={firstName} type={"text"}></InputBox>
+            <InputBox value={"Last Name"} placeholder={"Doe"} name={lastName} type={"text"}></InputBox>
+            <InputBox value={"Email"} placeholder={"example@gmail.com"} name={username} type={"email"}></InputBox>
+            <InputBox value={"Password"} placeholder={"123456"} name={password} type={"password"}></InputBox>
             
             <div className="px-4 mt-6">
                 <Button label={"Sign up"} onClick={onSignUpClick}></Button>
