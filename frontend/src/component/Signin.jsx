@@ -26,8 +26,7 @@ export function Signin(){
 
       if(response.status == 200){
         setWrongPassword(false);
-        window.localStorage.setItem("EasyPayToken", response.data)
-        navigate("/dashboard")
+        navigate("/dashboard" , { state: { token: response.data } })
       }
     }      
     catch(e){
@@ -48,13 +47,11 @@ export function Signin(){
         <SubHeading content={"Enter your credentials to access your account"} />
         </div>
 
-        <div onClick={()=>{setWrongPassword(false)}}>
-          <div>
-            <InputBox value={"Email"} placeholder={"example@gmail.com"} name={username} type={"email"}></InputBox>
+
+        <InputBox value={"Email"} placeholder={"example@gmail.com"} name={username} type={"email"}></InputBox>
             
-            <InputBox value={"Password"} placeholder={"123456"} name={password} type={"password"}></InputBox>
-            </div>
-        </div>
+        <InputBox value={"Password"} placeholder={"123456"} name={password} type={"password"}></InputBox>
+
         
         <div className="pt-4">
           <Button label={"Sign in"}  onClick={onSignInClick}/>

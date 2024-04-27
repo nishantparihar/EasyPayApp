@@ -1,39 +1,44 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Button } from "./Button"
+import { useNavigate } from "react-router-dom";
+import { useRecoilState } from "recoil";
+import { usersAtom } from "../state/atoms/atoms";
+import axios from "axios";
 
 export const Users = () => {
     // Replace with backend call
-    const [users, setUsers] = useState([{
-        firstName: "Kishan",
-        lastName: "Singh",
-        _id: 1
-        },
-        {
-            firstName: "Devi",
-            lastName: "Singh",
-            _id: 2
-        },
-        {
-            firstName: "Virat",
-            lastName: "Kohli",
-            _id: 3
-        },
-    ]);
+    const [users, setUsers] = useRecoilState(usersAtom);
+    const [filter, setFilter] = useState("")
+
+    useEffect(()=>{
+        axios.get(`http://localhost:3000/api/v1/user/bulk?filter=${filter}`)
+        .then((response)=>{
+            setUsers(response.data.users);
+        })
+    }, [users])
+
 
     return <>
         <div className="font-bold mt-6 text-lg">
             Users
         </div>
         <div className="my-2">
-            <input type="text" placeholder="Search users..." className="w-full px-2 py-1 border rounded border-slate-200"></input>
+            <input type="text" onChange={(e)=>{setFilter(e.target.value)}} placeholder="Search users..." className="w-full px-2 py-1 border rounded border-slate-200"></input>
         </div>
         <div>
-            {users.map(user => <User user={user} key={user._id} />)}
+            {users.map(user => <User user={user} key={user._id} sendTo = {user._id} />)}
         </div>
     </>
 }
 
-function User({user}) {
+function sendMoneyClick(){
+    
+}
+
+function User({user, sendTo}) {
+
+    const navigate = useNavigate();
+
     return <div className="flex justify-between">
         <div className="flex">
             <div className="rounded-full h-12 w-12 bg-slate-200 flex justify-center mt-1 mr-2">
@@ -49,7 +54,7 @@ function User({user}) {
         </div>
 
         <div className="flex flex-col justify-center h-ful">
-            <Button label={"Send Money"} />
+            <Button label={"Send Money"} onClick={()=>{navigate("/send", {state:{sendTo}})}}/>
         </div>
     </div>
 }

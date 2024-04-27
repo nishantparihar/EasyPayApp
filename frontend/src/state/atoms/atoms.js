@@ -20,3 +20,13 @@ export const password = atom({
     key: "password",
     default: ""
 })
+
+export const usersAtom = atom({
+    key: "usersAtom",
+    default:[]
+})
+
+export const userBalance = atom({
+    key: "userBalance",
+    default: 0
+})

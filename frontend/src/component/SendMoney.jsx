@@ -1,4 +1,11 @@
+import { useLocation } from "react-router-dom"
+
 export const SendMoney = () => {
+
+    const {state} = useLocation()
+    const {sendTo} = state;
+    console.log(sendTo);
+
     return <div className="flex justify-center h-screen bg-gray-100">
         <div className="h-full flex flex-col justify-center">
             <div
@@ -18,7 +25,7 @@ export const SendMoney = () => {
                     <div className="space-y-2">
                     <label
                         className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                        for="amount"
+                        htmlFor="amount"
                     >
                         Amount (in Rs)
                     </label>
