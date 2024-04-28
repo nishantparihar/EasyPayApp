@@ -19,7 +19,7 @@ export function Dashboard(){
         axios.get("http://localhost:3000/api/v1/account/balance", {
             
             headers:{
-                "authorization": "Bearer " + token.token
+                "authorization": "Bearer " + token
             },
             
         })

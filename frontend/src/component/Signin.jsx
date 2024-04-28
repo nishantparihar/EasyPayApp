@@ -26,7 +26,7 @@ export function Signin(){
 
       if(response.status == 200){
         setWrongPassword(false);
-        navigate("/dashboard" , { state: { token: response.data } })
+        navigate("/dashboard" , { state: { token: response.data.token } })
       }
     }      
     catch(e){

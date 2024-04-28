@@ -4,11 +4,38 @@ import {InputBox} from "./InputBox"
 import { Button } from "./Button"
 import { BottomWarning } from "./BottomWarning"
 import { firstName, lastName, username, password } from "../state/atoms/atoms"
+import axios from "axios";
+import { useRecoilValue } from "recoil"
+import { useNavigate } from "react-router-dom"
 
 
 export function Signup(){
 
-    function onSignUpClick(){
+    const username1 = useRecoilValue(username);
+    const firstName1 =  useRecoilValue(firstName);
+    const lastName1 = useRecoilValue(lastName);
+    const password1 =  useRecoilValue(password);
+    const navigate = useNavigate();
+
+    async function onSignUpClick(){
+
+        try{
+            const response = await axios.post("http://localhost:3000/api/v1/user/signup", {
+                username: username1,
+                firstName: firstName1,
+                lastName: lastName1,
+                password: password1
+                }
+            )
+    
+            if(response.status == 200){
+               
+                navigate("/dashboard" , { state: { token: response.data.token } })
+            }
+        }
+        catch(e){
+            console.log(e)
+        }
 
     }
 

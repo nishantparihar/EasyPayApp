@@ -20,6 +20,7 @@ const signupValidation = zod.object({
 
 router.post("/signup", async (req, res)=>{
     const signupDetails = req.body;
+    console.log(signupDetails)
     const parsedDeatials = signupValidation.safeParse(signupDetails);
 
     if(!parsedDeatials.success){

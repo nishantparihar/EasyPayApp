@@ -31,9 +31,7 @@ export const Users = () => {
     </>
 }
 
-function sendMoneyClick(){
-    
-}
+
 
 function User({user, sendTo}) {
 
