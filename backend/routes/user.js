@@ -109,7 +109,9 @@ const passwordValidation = zod.object({
 router.put("/", authMiddleware, async (req, res) => {
     
     const newInfo = req.body;
+    console.log(newInfo)
     const { success } = passwordValidation.safeParse(newInfo);
+
   
     if(!success){
         res.status(411).json({
@@ -119,6 +121,7 @@ router.put("/", authMiddleware, async (req, res) => {
         return;
     }
     else{
+        
         await userModel.updateOne({_id: req.userId}, newInfo);
         res.status(200).json({
             message: "Updated successfully"
@@ -129,11 +132,12 @@ router.put("/", authMiddleware, async (req, res) => {
 
 
 
-router.get("/bulk", async (req, res) => {
+router.get("/bulk", authMiddleware, async (req, res) => {
     let filter = req.query.filter || "";
     filter = new RegExp(filter, 'i');
+    const _id = req.userId;
 
-    const users = await userModel.find({
+    let users = await userModel.find({
         $or: [
                 {
                    firstName: { "$regex": filter }
@@ -144,6 +148,8 @@ router.get("/bulk", async (req, res) => {
              ]
     })
 
+    users = users.filter(user => user._id != _id);
+
     res.json({
         users: users.map(user => ({
             username: user.username,
@@ -153,5 +159,21 @@ router.get("/bulk", async (req, res) => {
         }))
     })
 })
+
+
+router.get("/info", authMiddleware, async (req, res) =>{
+
+    const user = await userModel.findOne({_id: req.userId});
+    res.status(200).json({
+        username: user.username,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        password: user.password,
+        _id: user._id
+    })
+
+})
+
+
 
 module.exports = router;

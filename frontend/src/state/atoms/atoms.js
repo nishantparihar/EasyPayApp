@@ -30,3 +30,12 @@ export const userBalance = atom({
     key: "userBalance",
     default: 0
 })
+
+export const userInfo = atom({
+    key: "userInfo",
+    default : {        
+        username: "",
+        firstName: "",
+        lastName: "",
+        _id: ""}
+})

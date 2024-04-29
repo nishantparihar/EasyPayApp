@@ -1,10 +1,48 @@
-import { useLocation } from "react-router-dom"
+import axios from "axios";
+import { useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom"
 
 export const SendMoney = () => {
 
+    // const [errorMsg, setErrorMsg] = useState("");
+    const [amount, setAmount] = useState(0);
+    const navigate = useNavigate();
+    
+
     const {state} = useLocation()
-    const {sendTo} = state;
-    console.log(sendTo);
+
+    if (state == null){
+        return <div>Access Denied</div>
+    }
+
+    const {sendTo, name, token} = state;
+    
+    
+    async function makeTransaction(){
+
+        try{
+            const response = await axios.post("http://localhost:3000/api/v1/account/transfer", {
+                amount,
+                to: sendTo
+                },
+                {
+                    headers:{
+                        authorization: "Bearer " + token,
+                    }
+                }
+            )
+
+            document.getElementById("amount").value = "";
+            alert("Transaction Successfull")
+            navigate("/dashboard", { state: { token: token } })
+            
+        }
+        catch(e){
+            document.getElementById("amount").value = "";
+            alert("Transaction Denied")
+        }
+
+    }
 
     return <div className="flex justify-center h-screen bg-gray-100">
         <div className="h-full flex flex-col justify-center">
@@ -17,9 +55,9 @@ export const SendMoney = () => {
                 <div className="px-6 pt-4 pb-10">
                 <div className="flex items-center space-x-4 pb-3">
                     <div className="w-12 h-12 rounded-full bg-green-500 flex items-center justify-center">
-                    <span className="text-2xl text-white">A</span>
+                    <span className="text-2xl text-white">{name[0]}</span>
                     </div>
-                    <h3 className="text-2xl font-semibold">Friend's Name</h3>
+                    <h3 className="text-2xl font-semibold">{name}</h3>
                 </div>
                 <div className="space-y-4">
                     <div className="space-y-2">
@@ -30,14 +68,26 @@ export const SendMoney = () => {
                         Amount (in Rs)
                     </label>
                     <input
-                        type="number"
-                        className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                        type="text"
+                        inputMode="numeric"
+                        onKeyDown={(event) => {
+                            if (event.key !== 'Backspace' && !/[0-9]/.test(event.key)) {
+                                event.preventDefault();
+                            }
+
+                          }}
+                        onChange={(e) => {setAmount(e.target.value)}}
+                        className= " flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
                         id="amount"
                         placeholder="Enter amount"
+                        required
                     />
                     </div>
-                    <button className="justify-center rounded-md text-sm font-medium ring-offset-background transition-colors h-10 px-4 py-2 w-full bg-green-500 text-white">
+                    <button onClick={makeTransaction} className="justify-center rounded-md text-sm font-medium ring-offset-background transition-colors h-10 px-4 py-2 w-full bg-green-500 text-white">
                         Initiate Transfer
+                    </button>
+                    <button onClick={()=>{navigate("/dashboard", { state: { token: token } })}} className="justify-center rounded-md text-sm font-medium ring-offset-background transition-colors h-10 px-4 py-2 w-full bg-red-500 text-white">
+                        Cancel
                     </button>
                 </div>
                 </div>

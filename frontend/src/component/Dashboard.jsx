@@ -2,7 +2,7 @@ import { useLocation } from "react-router-dom";
 import { Appbar } from "./Appbar";
 import { Balance } from "./Balance";
 import { Users } from "./Users";
-import { userBalance } from "../state/atoms/atoms";
+import { userBalance, userInfo } from "../state/atoms/atoms";
 import { useRecoilState } from "recoil";
 import { useEffect } from "react";
 import axios from "axios";
@@ -12,7 +12,14 @@ import axios from "axios";
 export function Dashboard(){
 
     const [balance, setBalance] = useRecoilState(userBalance);
+    const [userInformation, setUserInformation] = useRecoilState(userInfo);
     const { state } = useLocation()
+    
+
+    if (state == null){
+        return <div>Access Denied</div>
+    }
+
     const {token} = state
 
     useEffect(()=>{
@@ -28,11 +35,29 @@ export function Dashboard(){
         })
     }, [])
 
+
+    useEffect(()=>{
+        axios.get("http://localhost:3000/api/v1/user/info", 
+            {
+                headers:{
+                    "authorization": "Bearer " + token
+                },
+            }
+        )
+        .then((response)=>{
+            
+            setUserInformation(response.data);
+        })
+        .catch((e)=>{
+            console.log(e);
+        })
+    }, [])
+   
     return <div>
             <div className="mx-40">
-                <Appbar></Appbar>
+                <Appbar userInfo = {userInformation} token={token}></Appbar>
                 <Balance value={balance}></Balance>
-                <Users></Users>
+                <Users token = {token}></Users>
             </div>
     </div>
 }

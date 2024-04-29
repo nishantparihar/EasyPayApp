@@ -5,13 +5,19 @@ import { useRecoilState } from "recoil";
 import { usersAtom } from "../state/atoms/atoms";
 import axios from "axios";
 
-export const Users = () => {
+export const Users = ({token}) => {
     // Replace with backend call
     const [users, setUsers] = useRecoilState(usersAtom);
     const [filter, setFilter] = useState("")
 
     useEffect(()=>{
-        axios.get(`http://localhost:3000/api/v1/user/bulk?filter=${filter}`)
+        axios.get(`http://localhost:3000/api/v1/user/bulk?filter=${filter}`,
+            {
+                headers:{
+                    "authorization": "Bearer " + token
+                },
+            }
+        )
         .then((response)=>{
             setUsers(response.data.users);
         })
@@ -26,14 +32,14 @@ export const Users = () => {
             <input type="text" onChange={(e)=>{setFilter(e.target.value)}} placeholder="Search users..." className="w-full px-2 py-1 border rounded border-slate-200"></input>
         </div>
         <div>
-            {users.map(user => <User user={user} key={user._id} sendTo = {user._id} />)}
+            {users.map(user => <User user={user} key={user._id} sendTo = {user._id} token = {token} />)}
         </div>
     </>
 }
 
 
 
-function User({user, sendTo}) {
+function User({user, sendTo, token}) {
 
     const navigate = useNavigate();
 
@@ -52,7 +58,9 @@ function User({user, sendTo}) {
         </div>
 
         <div className="flex flex-col justify-center h-ful">
-            <Button label={"Send Money"} onClick={()=>{navigate("/send", {state:{sendTo}})}}/>
+            <Button 
+            label={"Send Money"} 
+            onClick={()=>{navigate("/send", {state:{sendTo, name: user.firstName + " " + user.lastName, token}})}}/>
         </div>
     </div>
 }
