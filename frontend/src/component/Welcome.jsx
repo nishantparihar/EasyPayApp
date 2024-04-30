@@ -22,13 +22,17 @@ export function Welcome(){
         <button onClick={()=>{navigate("/signup", {})}}className="justify-center rounded-md text-sm font-medium ring-offset-background transition-colors h-10 px-4 py-2 mt-6 w-full bg-[#5F16C5] hover:bg-green-500 text-white">
             <div className="flex justify-center items-center relative">
                 New Users 
-                <Arrow />
+                <div className="absolute left-60" >
+                  <Arrow />
+                </div>
             </div>
         </button>
         <button onClick={()=>{navigate("/signin", {})}}className="justify-center rounded-md text-sm font-medium ring-offset-background transition-colors h-10 px-4 py-2 mt-6 mb-10 w-full bg-[#5F16C5] hover:bg-green-500 text-white">
             <div className="flex justify-center items-center relative">
                 Existing Users 
-                <Arrow />
+                <div className="absolute left-60" >
+                  <Arrow />
+                </div>
             </div>
         </button>
         
