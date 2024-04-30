@@ -53,8 +53,8 @@ export function Dashboard(){
         })
     }, [])
    
-    return <div>
-            <div className="mx-40">
+    return <div className="bg-[#f3d3a5] w-full h-screen">
+            <div className="mx-20 px-20 bg-[#E0FFD7] h-full">
                 <Appbar userInfo = {userInformation} token={token}></Appbar>
                 <Balance value={balance}></Balance>
                 <Users token = {token}></Users>

@@ -37,7 +37,7 @@ export function Signin(){
   }
 
 
-    return <div className="bg-slate-300 h-screen flex justify-center">
+    return <div className="bg-[#C1A7FE] h-screen flex justify-center">
     <div className="flex flex-col justify-center">
       <div className="rounded-lg bg-white w-80 text-center p-2 h-max px-4">
         
@@ -53,7 +53,7 @@ export function Signin(){
         <InputBox value={"Password"} placeholder={"123456"} name={password} type={"password"}></InputBox>
 
         
-        <div className="pt-4">
+        <div className="mt-4">
           <Button label={"Sign in"}  onClick={onSignInClick}/>
         </div>
         {wrongPassword && <div className="text-red-600">Worng username or password</div>}

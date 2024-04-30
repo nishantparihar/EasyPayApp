@@ -20,7 +20,6 @@ const signupValidation = zod.object({
 
 router.post("/signup", async (req, res)=>{
     const signupDetails = req.body;
-    console.log(signupDetails)
     const parsedDeatials = signupValidation.safeParse(signupDetails);
 
     if(!parsedDeatials.success){
@@ -32,7 +31,6 @@ router.post("/signup", async (req, res)=>{
         const findResult = await userModel.findOne({'username' : parsedDeatials.data.username});
         
         if(findResult){
-            console.log(findResult)
             res.status(411).json({
                 message: "Email already taken"
             });
@@ -109,7 +107,6 @@ const passwordValidation = zod.object({
 router.put("/", authMiddleware, async (req, res) => {
     
     const newInfo = req.body;
-    console.log(newInfo)
     const { success } = passwordValidation.safeParse(newInfo);
 
   

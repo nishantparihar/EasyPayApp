@@ -39,7 +39,7 @@ export function Signup(){
 
     }
 
-    return <div className="bg-main-bg w-full h-screen flex items-center justify-center">
+    return <div className="bg-[#C2A5FF] w-full h-screen flex items-center justify-center">
 
         <div className="bg-white w-[20rem]  rounded-lg">
             

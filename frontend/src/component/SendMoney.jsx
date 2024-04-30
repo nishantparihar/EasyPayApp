@@ -44,7 +44,7 @@ export const SendMoney = () => {
 
     }
 
-    return <div className="flex justify-center h-screen bg-gray-100">
+    return <div className="flex justify-center h-screen bg-[#C2A5FF]">
         <div className="h-full flex flex-col justify-center">
             <div
                 className="border h-min text-card-foreground max-w-md px-4 w-96 bg-white shadow-lg rounded-lg"

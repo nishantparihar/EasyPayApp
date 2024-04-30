@@ -5,6 +5,7 @@ import { Signup } from "./component/Signup";
 import { Dashboard } from "./component/Dashboard";
 import { SendMoney } from "./component/SendMoney";
 import { UpdateProfile } from "./component/UpdatePriofile";
+import { Welcome } from "./component/Welcome";
 
 function App() {
 
@@ -12,6 +13,7 @@ function App() {
     <div>
         <BrowserRouter>
             <Routes>
+                <Route path="/" element={<Welcome />} />
                 <Route path="/signin" element={<Signin />} />
                 <Route path="/signup" element={<Signup />} />
                 <Route path="/updateProfile" element={<UpdateProfile />} />
