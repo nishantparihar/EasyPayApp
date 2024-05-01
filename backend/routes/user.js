@@ -134,10 +134,10 @@ router.put("/", authMiddleware, async (req, res) => {
 
 
 
-router.get("/bulk", async (req, res) => {
+router.get("/bulk", authMiddleware, async (req, res) => {
     let filter = req.query.filter || "";
     filter = new RegExp(filter, 'i');
-    // const _id = req.userId;
+    const _id = req.userId;
 
     let users = await userModel.find({
         $or: [
@@ -150,7 +150,7 @@ router.get("/bulk", async (req, res) => {
              ]
     })
 
-    // users = users.filter(user => user._id != _id);
+    users = users.filter(user => user._id != _id);
 
     res.json({
         users: users.map(user => ({
