@@ -1,17 +1,16 @@
-
-const jwt = require("jsonwebtoken")
 const jose = require('jose')
 const { JWT_SECRET } = require("./config")
 
 
-const authMiddleware = (req, res, next) => {
+const authMiddleware = async (req, res, next) => {
     try{        
         let jwtToken = req.headers.authorization;
         
         jwtToken = jwtToken.split(" ")[1];
         
-        const decoded = jwt.verify(jwtToken, JWT_SECRET);
-        req.userId = decoded.userId;
+        // const decoded = jwt.verify(jwtToken, JWT_SECRET);
+        const decoded = await jose.jwtVerify(jwtToken, new TextEncoder().encode(JWT_SECRET));
+        req.userId = decoded.payload.userId;
         next();
     }
     catch(err){

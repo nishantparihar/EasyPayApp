@@ -1,9 +1,9 @@
 const express = require("express");
+const jose = require('jose')
 
 const zod = require("zod");
 const router = express.Router();
 const { userModel, accountModel } = require("../db");
-const jwt = require("jsonwebtoken");
 const { JWT_SECRET } = require("../config");
 
 const { authMiddleware } = require("../middleware");
@@ -49,9 +49,13 @@ router.post("/signup", async (req, res)=>{
                 balance: 1 + Math.random() * 10000
             })
 
+            const token = await new jose.SignJWT({userId})
+                            .setProtectedHeader({alg: 'HS256', typ: 'JWT'})
+                            .sign(new TextEncoder().encode(JWT_SECRET))
+
             res.status(200).json({
                 message: "User created successfully",
-                token: jwt.sign({userId}, JWT_SECRET)
+                token
             })
         }
     }
@@ -80,12 +84,13 @@ router.post("/signin", async (req, res) => {
     });
 
     if (user) {
-        const token = jwt.sign({
-            userId: user._id
-        }, JWT_SECRET);
+
+        const token = await new jose.SignJWT({userId: user._id})
+                        .setProtectedHeader({alg: 'HS256', typ: 'JWT'})
+                        .sign(new TextEncoder().encode(JWT_SECRET))
   
         res.json({
-            token: token
+            token
         })
         return;
     }
@@ -129,10 +134,10 @@ router.put("/", authMiddleware, async (req, res) => {
 
 
 
-router.get("/bulk", authMiddleware, async (req, res) => {
+router.get("/bulk", async (req, res) => {
     let filter = req.query.filter || "";
     filter = new RegExp(filter, 'i');
-    const _id = req.userId;
+    // const _id = req.userId;
 
     let users = await userModel.find({
         $or: [
@@ -145,7 +150,7 @@ router.get("/bulk", authMiddleware, async (req, res) => {
              ]
     })
 
-    users = users.filter(user => user._id != _id);
+    // users = users.filter(user => user._id != _id);
 
     res.json({
         users: users.map(user => ({

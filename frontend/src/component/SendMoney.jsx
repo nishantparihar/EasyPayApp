@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom"
+import {server} from "../assets/server"
 
 export const SendMoney = () => {
 
@@ -21,7 +22,7 @@ export const SendMoney = () => {
     async function makeTransaction(){
 
         try{
-            const response = await axios.post("http://localhost:3000/api/v1/account/transfer", {
+            const response = await axios.post(`${server}account/transfer`, {
                 amount,
                 to: sendTo
                 },

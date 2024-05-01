@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import { usersAtom } from "../state/atoms/atoms";
 import axios from "axios";
+import {server} from "../assets/server"
 
 export const Users = ({token}) => {
     // Replace with backend call
@@ -11,17 +12,17 @@ export const Users = ({token}) => {
     const [filter, setFilter] = useState("")
 
     useEffect(()=>{
-        axios.get(`http://localhost:3000/api/v1/user/bulk?filter=${filter}`,
+        axios.get(`${server}user/bulk?filter=${filter}`,
             {
                 headers:{
-                    "authorization": "Bearer " + token
+                    "authorization": "Bearer " + token,
                 },
             }
         )
         .then((response)=>{
             setUsers(response.data.users);
         })
-    }, [users])
+    }, [])
 
 
     return <>

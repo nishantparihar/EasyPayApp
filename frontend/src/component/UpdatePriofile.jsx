@@ -1,4 +1,5 @@
 import {SubHeading} from "./SubHeading"
+import {server} from "../assets/server"
 
 import { firstName, lastName, username, password } from "../state/atoms/atoms"
 import axios from "axios";
@@ -32,7 +33,7 @@ export function UpdateProfile(){
 
 
     useEffect(()=>{
-        axios.get("http://localhost:3000/api/v1/user/info", 
+        axios.get(`${server}user/info`, 
             {
                 headers:{
                     "authorization": "Bearer " + token
@@ -66,7 +67,7 @@ export function UpdateProfile(){
         }
 
         try{
-            const response = await axios.put("http://localhost:3000/api/v1/user/", {
+            const response = await axios.put(`${server}user/`, {
                 firstName: updatedFirstName,
                 lastName: updatedLastName,
                 password: updatedPassword

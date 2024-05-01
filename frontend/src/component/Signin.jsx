@@ -8,6 +8,7 @@ import { useRecoilValue } from "recoil"
 import axios from "axios"
 import { useNavigate } from "react-router-dom"
 import { useState } from "react"
+import {server} from "../assets/server"
 
 
 export function Signin(){
@@ -19,7 +20,7 @@ export function Signin(){
   async function onSignInClick(){
 
     try{
-      const response = await axios.post("http://localhost:3000/api/v1/user/signin",{
+      const response = await axios.post(`${server}user/signin`,{
           username: username1,
           password: password1
       })

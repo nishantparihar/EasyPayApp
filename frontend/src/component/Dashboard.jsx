@@ -6,6 +6,7 @@ import { userBalance, userInfo } from "../state/atoms/atoms";
 import { useRecoilState } from "recoil";
 import { useEffect } from "react";
 import axios from "axios";
+import {server} from "../assets/server"
 
 
 
@@ -23,7 +24,7 @@ export function Dashboard(){
     const {token} = state
 
     useEffect(()=>{
-        axios.get("http://localhost:3000/api/v1/account/balance", {
+        axios.get(`${server}account/balance`, {
             
             headers:{
                 "authorization": "Bearer " + token
@@ -37,7 +38,7 @@ export function Dashboard(){
 
 
     useEffect(()=>{
-        axios.get("http://localhost:3000/api/v1/user/info", 
+        axios.get(`${server}user/info`, 
             {
                 headers:{
                     "authorization": "Bearer " + token

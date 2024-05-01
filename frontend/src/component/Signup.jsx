@@ -7,6 +7,7 @@ import { firstName, lastName, username, password } from "../state/atoms/atoms"
 import axios from "axios";
 import { useRecoilValue } from "recoil"
 import { useNavigate } from "react-router-dom"
+import {server} from "../assets/server"
 
 
 export function Signup(){
@@ -20,7 +21,7 @@ export function Signup(){
     async function onSignUpClick(){
 
         try{
-            const response = await axios.post("http://localhost:3000/api/v1/user/signup", {
+            const response = await axios.post(`${server}user/signup`, {
                 username: username1,
                 firstName: firstName1,
                 lastName: lastName1,
