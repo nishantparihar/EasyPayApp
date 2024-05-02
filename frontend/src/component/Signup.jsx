@@ -30,7 +30,6 @@ export function Signup(){
                 }
             )
             .then((response)=>{
-                console.log("response.data")
                 if(response.status == 200){
                     setWrongPassword(null);
                     navigate("/dashboard" , { state: { token: response.data.token } })

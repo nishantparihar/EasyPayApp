@@ -24,7 +24,6 @@ router.post("/signup", async (req, res)=>{
     const parsedDeatials = signupValidation.safeParse(signupDetails);
 
     if(!parsedDeatials.success){
-        console.log(parsedDeatials.error.issues[0].message)
         res.status(411).json({
             message: parsedDeatials.error.issues[0].message
         });
