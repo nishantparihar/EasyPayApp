@@ -24,16 +24,20 @@ export function Dashboard(){
     const {token} = state
 
     useEffect(()=>{
-        axios.get(`${server}account/balance`, {
+        const intervalId = setInterval(()=>{
+            axios.get(`${server}account/balance`, {
             
-            headers:{
-                "authorization": "Bearer " + token
-            },
-            
-        })
-        .then((response)=>{
-            setBalance(response.data.balance.toFixed(2));
-        })
+                headers:{
+                    "authorization": "Bearer " + token
+                },
+                
+            })
+            .then((response)=>{
+                setBalance(response.data.balance.toFixed(2));
+            })
+        }, 1000)
+
+        return () => { clearInterval(intervalId) }
     }, [])
 
 
