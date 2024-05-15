@@ -24,16 +24,20 @@ export function Dashboard(){
     const {token} = state
 
     useEffect(()=>{
-        axios.get(`${server}account/balance`, {
+        const intervalId = setInterval(()=>{
+            axios.get(`${server}account/balance`, {
             
-            headers:{
-                "authorization": "Bearer " + token
-            },
-            
-        })
-        .then((response)=>{
-            setBalance(response.data.balance.toFixed(2));
-        })
+                headers:{
+                    "authorization": "Bearer " + token
+                },
+                
+            })
+            .then((response)=>{
+                setBalance(response.data.balance.toFixed(2));
+            })
+        }, 1000)
+
+        return () => { clearInterval(intervalId) }
     }, [])
 
 
@@ -54,11 +58,12 @@ export function Dashboard(){
         })
     }, [])
    
-    return <div className="bg-[#f3d3a5] w-full h-screen">
-            <div className="mx-20 px-20 bg-[#E0FFD7] h-full">
-                <Appbar userInfo = {userInformation} token={token}></Appbar>
-                <Balance value={balance}></Balance>
-                <Users token = {token}></Users>
+    return  <div className="bg-[#f3d3a5] w-full min-h-[100vh]">
+                <div className="mx-20 px-20 bg-[#E0FFD7] pb-4 min-h-[100vh] ">
+                    <Appbar userInfo = {userInformation} token={token}></Appbar>
+                    <Balance value={balance}></Balance>
+                    <Users token = {token}></Users>
+                </div>
             </div>
-    </div>
+            
 }

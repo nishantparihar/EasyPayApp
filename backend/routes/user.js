@@ -10,11 +10,12 @@ const { authMiddleware } = require("../middleware");
 
 
 const signupValidation = zod.object({
-    username: zod.string().email().min(3).max(30),
-    firstName: zod.string().max(50),
-    lastName: zod.string().max(50),
-    password: zod.string().min(6),
+    username: zod.string().email({message: "Please enter a valid email address"}).min(3).max(30),
+    firstName: zod.string().max(50, {message: "First name can not have more than 50 character"}),
+    lastName: zod.string().max(50, {message: "Last name can not have more than 50 character"}),
+    password: zod.string().min(6, {message: "Password length must be 6 or more characters"}),
 })
+.required({message:"All fields are required"})
 
 
 
@@ -24,7 +25,7 @@ router.post("/signup", async (req, res)=>{
 
     if(!parsedDeatials.success){
         res.status(411).json({
-            message: "Incorrect inputs"
+            message: parsedDeatials.error.issues[0].message
         });
     }
     else{
@@ -36,27 +37,36 @@ router.post("/signup", async (req, res)=>{
             });
         }
         else{
-            const createUserResult = await userModel.create({
-                username: parsedDeatials.data.username,
-                password: parsedDeatials.data.password,
-                firstName: parsedDeatials.data.firstName,
-                lastName: parsedDeatials.data.lastName
-            })
+            try{
+                const createUserResult = await userModel.create({
+                    username: parsedDeatials.data.username,
+                    password: parsedDeatials.data.password,
+                    firstName: parsedDeatials.data.firstName,
+                    lastName: parsedDeatials.data.lastName
+                })
+    
+                const userId = createUserResult._id
+                await accountModel.create({
+                    userId,
+                    balance: 1 + Math.random() * 10000
+                })
+    
+                const token = await new jose.SignJWT({userId})
+                                .setProtectedHeader({alg: 'HS256', typ: 'JWT'})
+                                .sign(new TextEncoder().encode(JWT_SECRET))
+    
+                res.status(200).json({
+                    message: "User created successfully",
+                    token
+                })
 
-            const userId = createUserResult._id
-            await accountModel.create({
-                userId,
-                balance: 1 + Math.random() * 10000
-            })
-
-            const token = await new jose.SignJWT({userId})
-                            .setProtectedHeader({alg: 'HS256', typ: 'JWT'})
-                            .sign(new TextEncoder().encode(JWT_SECRET))
-
-            res.status(200).json({
-                message: "User created successfully",
-                token
-            })
+            }
+            catch(e){
+                res.status(411).json({
+                    message: "All fields are mandatory",
+                   
+                })
+            }
         }
     }
     
@@ -134,10 +144,10 @@ router.put("/", authMiddleware, async (req, res) => {
 
 
 
-router.get("/bulk", async (req, res) => {
+router.get("/bulk",authMiddleware, async (req, res) => {
     let filter = req.query.filter || "";
     filter = new RegExp(filter, 'i');
-    // const _id = req.userId;
+    const _id = req.userId;
 
     let users = await userModel.find({
         $or: [
@@ -150,7 +160,7 @@ router.get("/bulk", async (req, res) => {
              ]
     })
 
-    // users = users.filter(user => user._id != _id);
+    users = users.filter(user => user._id != _id);
 
     res.json({
         users: users.map(user => ({

@@ -8,37 +8,50 @@ import axios from "axios";
 import { useRecoilValue } from "recoil"
 import { useNavigate } from "react-router-dom"
 import {server} from "../assets/server"
-
+import { useState } from "react"
 
 export function Signup(){
 
+    const [wrongPassword, setWrongPassword] = useState(null);
     const username1 = useRecoilValue(username);
     const firstName1 =  useRecoilValue(firstName);
     const lastName1 = useRecoilValue(lastName);
     const password1 =  useRecoilValue(password);
     const navigate = useNavigate();
 
-    async function onSignUpClick(){
+    function onSignUpClick(){
 
         try{
-            const response = await axios.post(`${server}user/signup`, {
+           axios.post(`${server}user/signup`, {
                 username: username1,
                 firstName: firstName1,
                 lastName: lastName1,
                 password: password1
                 }
             )
-    
-            if(response.status == 200){
-               
-                navigate("/dashboard" , { state: { token: response.data.token } })
-            }
+            .then((response)=>{
+                if(response.status == 200){
+                    setWrongPassword(null);
+                    navigate("/dashboard" , { state: { token: response.data.token } })
+                }
+
+            })
+            .catch((response)=>{
+                try{
+                    setWrongPassword(response.response.data.message);
+                }
+                catch(e){
+                    setWrongPassword("Server Error");
+                }
+            })
+ 
         }
         catch(e){
-            console.log(e)
+            setWrongPassword("Server Error");
         }
 
     }
+
 
     return <div className="bg-[#C2A5FF] w-full h-screen flex items-center justify-center">
 
@@ -58,6 +71,8 @@ export function Signup(){
             <div className="px-4 mt-6">
                 <Button label={"Sign up"} onClick={onSignUpClick}></Button>
             </div>
+
+            {wrongPassword && <div className="text-red-600 text-center">{wrongPassword}</div>}
             
             <div className="mb-4">
                 <BottomWarning label={"Already have an account?"} buttonText={"Sign in"} to={"/signin"} ></BottomWarning>
